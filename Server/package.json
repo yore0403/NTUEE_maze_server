@@ -1,0 +1,38 @@
+{
+  "name": "with-socket.io",
+  "version": "1.0.0",
+  "author": "Sergio Daniel Xalambrí <sergiodxa@gmail.com>",
+  "license": "MIT",
+  "dependencies": {
+    "antd": "^4.15.4",
+    "bootstrap": "^4.4.1",
+    "browserify-fs": "^1.0.0",
+    "cors": "^2.8.5",
+    "dotenv": "^12.0.3",
+    "express": "^4.17.2",
+    "isomorphic-fetch": "^3.0.0",
+    "next": "^12.0.7",
+    "nodemon": "^2.0.3",
+    "react": "^16.13.1",
+    "react-dom": "^16.13.1",
+    "react-file-reader": "^1.1.4",
+    "reactstrap": "^8.4.1",
+    "socket.io": "^4.0.2",
+    "socket.io-client": "^4.0.2"
+  },
+  "scripts": {
+    "dev": "nodemon server.js",
+    "build": "next build",
+    "start": "NODE_ENV=production node server.js",
+    "doc": "apidoc -i router -o router/apidoc-out"
+  },
+  "devDependencies": {
+    "apidoc": "^0.50.2"
+  },
+  "browser": {
+    "child_process": false,
+    "fs": false,
+    "path": false,
+    "os": false
+  }
+}

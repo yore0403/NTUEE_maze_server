@@ -1,0 +1,164 @@
+html,body {
+    height: 100%;
+    min-width: 680px;
+
+}
+
+#__next {
+    height: 100%;
+}
+
+.all {
+    height: 100%;
+    background-image: url(background.jpg);
+    background-size: cover;
+}
+
+.title {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    height: 20%;
+    color: white;
+    flex-direction: column;
+}
+
+h1 {
+    font-weight: bolder;
+}
+
+.body {
+    display: flex;
+    justify-content: center;
+    align-items: flex-start;
+    height: 55%;
+    min-height: 434px;
+    /* border: white 5px solid; */
+    
+}
+@import url(//db.onlinewebfonts.com/c/9f94dc20bb2a09c15241d3a880b7ad01?family=Menlo);
+.message_body {
+    display: flex;
+    justify-content: center;
+    align-items: flex-start;
+    height: 20%;
+    /* border: white 5px solid; */
+    white-space: pre-line;
+    
+}
+.message {
+    margin: 10px;
+    height: 7rem;
+    display: flex;
+    align-items: center;
+    text-align: left;
+    padding: 0rem;
+    color: white;
+    font-size: large;
+    white-space: pre;
+    width: 650px;
+    
+    font-family: 'Menlo', monospace;
+    vertical-align:top;
+    /* background-color: rgba(255, 166, 0, 0.3); */
+    /* width: 250px; */
+}
+
+.map_message {
+    margin: 10px;
+    height: 4rem;
+    display: flex;
+    align-items: center;
+    text-align: left;
+    padding: 1rem;
+    color: white;
+    font-size: large;
+    white-space: pre-line;
+    font-family: 'Menlo', monospace;
+    padding: 0rem;
+    /* background-color: rgba(255, 166, 0, 0.3); */
+    /* width: 250px; */
+}
+
+.right {
+    width: 25rem;
+    height: 100%;
+    /* border: white 5px solid; */
+    min-width: 22rem;
+}
+
+.left {
+    width: 280px;
+    /* border: white 5px solid; */
+    height: 100%;
+    min-width: 280px;
+}
+
+.table {
+    margin: 10px;
+    background-color: rgba(255, 166, 0, 0.3);
+    
+
+}
+
+.rank {
+    color: white;
+    font-size: 24px;
+}
+
+.status {
+    margin: 10px;
+    color: white;
+}
+
+.menu {
+    margin: 10px;
+    height: 4rem;
+    display: flex;
+    align-items: center;
+    text-align: center;
+    padding: 2rem;
+    border-radius: 10px;
+    border: white 5px solid;
+    color: white;
+    font-size: large;
+    background-color: rgba(255, 166, 0, 0.3);
+    width: 250px;
+}
+.menu:active {
+    background-color: rgba(175, 114, 0, 0.3);
+}
+.info {
+    margin: 10px;
+    height: 5rem;
+    width: 20rem;
+    display: flex;
+    align-items: center;
+    text-align: center;
+    padding: 1rem;
+    border-radius: 10px;
+    border: white 5px solid;
+    background-color: rgba(255, 166, 0, 0.3);
+}
+
+.displayText {
+    margin: 10px;
+    height: 20rem;
+    width: 23rem;
+    display: flex;
+    align-items: center;
+    text-align: center;
+    justify-content: center; 
+    padding: 0rem;
+    /* border-radius: 10px; */
+    /* border: white 5px solid; */
+    color: black;
+    font-size: 20px;
+    line-height: 1.5rem;
+    letter-spacing:0.55rem;
+    white-space: pre-wrap;
+    background-color: rgba(90, 63, 13, 0.3);
+    font-family: 'Menlo', monospace;
+    margin: 10px;
+    color: white;    
+}

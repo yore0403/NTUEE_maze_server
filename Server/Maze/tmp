@@ -1,0 +1,93 @@
+[7, 9, 10]
+[7, 9]
+[7]
+[-1]
+
+    def findPath(self,nd_start):
+        '''
+        find the best path to traverse all end node
+        concept:
+            calculate path cost: f -> 2, l,r -> 3
+            cp_value = score/cost
+        '''
+        self.accumulate_reward = 0
+        explored = []
+        nd_end_tmp = self.nd_end.copy()
+        if _sim:
+            nd_end = self.nd_end  # for simulation
+            step = 0
+            reward = 0s
+        
+        if nd_start in nd_end: nd_end.remove(nd_start)
+        # start search
+        nd_nxt = nd_start
+        # self.setExplored(nd_nxt)
+        path = [nd_nxt]
+        while(True):
+            path_nxt = self.findNextBestNode(nd_nxt)
+            if not path_nxt:break
+            nd_nxt = path_nxt[-1]
+            #step_count += len(path_nxt)-1
+            #maze.setJustVisited(nd_prev)
+            # self.setExplored(nd_nxt)
+            path.extend(path_nxt[1:])
+
+            if nd_nxt in nd_end: # check
+                reward += self.reward[nd_nxt]
+                nd_end.remove(nd_nxt)
+                if nd_end == []:
+                    # print("get all reward, count:",step_count,"reward:",reward)
+                    nd_end = [-1] 
+                else:
+                    pass
+            print(nd_end)
+            if nd_end == []:
+                break
+
+        self.nd_end = nd_end_tmp # backup
+
+
+        pathstr = self.pathToString(path)
+        return pathstr,reward
+
+
+
+
+    def findPath(self,nd_start):
+        '''
+        find the best path to traverse all end node
+        concept:
+            calculate path cost: f -> 2, l,r -> 3
+            cp_value = score/cost
+        '''
+        self.accumulate_reward = 0
+        explored = []
+        if _sim:
+            step = 0
+            reward = 0
+        
+        if nd_start not in explored: explored.append(nd_start)
+        # start search
+        nd_nxt = nd_start
+        # self.setExplored(nd_nxt)
+        path = [nd_nxt]
+        while(True):
+            path_nxt = self.findNextBestNode(nd_nxt)
+            if not path_nxt:break
+            nd_nxt = path_nxt[-1]
+            #step_count += len(path_nxt)-1
+            #maze.setJustVisited(nd_prev)
+            # self.setExplored(nd_nxt)
+            path.extend(path_nxt[1:])
+
+            if nd_nxt not in explored: # check
+                reward += self.reward[nd_nxt]
+                explored.append(nd_nxt)
+            
+            if set(self.nd_end) == set(explored):
+                break
+            print(explored)
+
+
+        pathstr = self.pathToString(path)
+        return pathstr,reward
