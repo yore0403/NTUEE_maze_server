@@ -4,7 +4,8 @@ import random
 import time
 import math
 
-ori2symbol = {1:'^',2:'v',3:'<',4:'>'}
+ori2symbol = {1:'ʌ',2:'v',3:'<',4:'>'}
+
 TURN = {'r':{1:4,4:2,2:3,3:1},'l':{1:3,3:2,2:4,4:1},'f':{1:1,3:3,2:2,4:4},'b':{1:2,3:4,2:1,4:3}}
 #TURN = {'l':{1:4,3:1,2:3,4:2},'r':{1:3,3:2,2:4,4:1},'f':{1:1,3:3,2:2,4:4},'b':{1:2,3:4,2:1,4:3}}
 ORIENTATION = {'up':1,'down':2,'left':3,'right':4}
@@ -37,7 +38,7 @@ class Grid:
             for i in range(width):
                 for j in range(height):
                     self.index_list.add(i*height+j+1)
-                    self.vertice[i*height+j+1] = [(width-i-1)*dist,(height-j-1)*dist]
+                    self.vertice[i*height+j+1] = [(width-i-1)*dist,(j)*dist]
                     nd_set[i*height+j+1] = i*height+j+1
                     if i != width-1:
                         edge_list.append([(i*height+j)+1,((i+1)*height+j)+1])
@@ -78,9 +79,9 @@ class Grid:
         succ_pos = self.vertice[succ]
         pos = []
         if direction == 1: # N
-            pos = [succ_pos[0],succ_pos[1]+dist]
-        if direction == 2: # S
             pos = [succ_pos[0],succ_pos[1]-dist]
+        if direction == 2: # S
+            pos = [succ_pos[0],succ_pos[1]+dist]
         if direction == 3: # W
             pos = [succ_pos[0]+dist,succ_pos[1]]
         if direction == 4: # E
@@ -91,9 +92,9 @@ class Grid:
         pos = self.vertice[i_int]
         succ_pos = self.vertice[succ_int]
         if direction == 1: # N
-            return ([pos[0],pos[1]] == [succ_pos[0],succ_pos[1]+dist])
-        if direction == 2: # S
             return ([pos[0],pos[1]] == [succ_pos[0],succ_pos[1]-dist])
+        if direction == 2: # S
+            return ([pos[0],pos[1]] == [succ_pos[0],succ_pos[1]+dist])
         if direction == 3: # W
             return ([pos[0],pos[1]] == [succ_pos[0]+dist,succ_pos[1]])
         if direction == 4: # E
@@ -122,7 +123,7 @@ class Grid:
                             #if i.isEnd(): self.end[i_int] = pos
                         else:
                             if  not self.checkPos(i_int,succ,direction,dist):
-                                print("ERROR:",dist,direction,i_int,self.vertice[i_int],succ,self.vertice[succ])      
+                                raise AssertionError()
                                 
                         self.dist[(i_int,succ)] = dist
         self.shift_map()

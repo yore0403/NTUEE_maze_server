@@ -12,14 +12,16 @@ const path = require('path');
 
 
 module.exports = ({io})=>{
-    console.log('keyboardInputxx');
     return (req, res) => {
 
         var rawdata = req.headers.raw;
+        console.log(req.headers.raw)
         
 
 
         var rows = rawdata.split("/");
+        console.log(req.headers.rows)
+
         // The file's text will be printed here
         let data = {};
         for (var row of rows.slice(1)) { 
@@ -47,17 +49,25 @@ module.exports = ({io})=>{
             console.log(req.headers.hash);
 
  
-        fs.writeFile("./data/csv_"+req.headers.hash+'.json', JSON.stringify(data), function(err) {
+        fs.writeFile("./data/csv_"+req.headers.hash+'_tmp.json', JSON.stringify(data), function(err) {
             if (err) {
                 console.log(err);
             }
         });
-        const pykey = spawn('python3', ['./Maze/loadMap.py',"./data/csv_"+req.headers.hash+'.json']);
-        pykey.stdout.on('data', function (data) {
+        const pykey = spawn('python3', ['./Maze/loadMap.py',"./data/csv_"+req.headers.hash+'_tmp.json']);
+        pykey.stdout.on('data', function (_data) {
             console.log('loadMap: Pipe data from python script ...');
-            dataToSend = JSON.parse(data);
-            res.json(dataToSend);
+            dataToSend = JSON.parse(_data);
             console.log(dataToSend);
+
+            if (dataToSend.maze != "") {
+                fs.writeFile("./data/csv_"+req.headers.hash+'.json', JSON.stringify(data), function(err) {
+                    if (err) {
+                        console.log(err);
+                    }
+                });                
+            }
+            res.json(dataToSend);
 
             pykey.on('close', (code) => {
                 console.log(`child process close all stdio with code ${code}`);

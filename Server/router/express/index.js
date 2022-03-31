@@ -7,9 +7,11 @@ module.exports = ({ io, PORT })=>{
     router.use(cors({origin:'http://localhost:4000'}))
     router.get("/maze", require('./maze')({io})); //click call this
     router.get("/download", require('./download')({io})); //click call this
+    router.get("/downloadZIP", require('./downloadZIP')({io})); //click call this
     router.get("/upload", require('./upload')({io})); //click call this
     router.get("/loadMap", require('./loadMap')({io})); //click call this
     router.get('/keyBoard',require('./keyBoard')({io}));
+    router.get('/DFScheck',require('./DFS')({io}));
     router.get("/info", (req, res) => {
         res.json({
             ip: require('./getIP')(PORT)

@@ -5,11 +5,50 @@ const {spawn} = require('child_process');
 const stdin = process.stdin;
 const fs = require("fs");
 
+function checkCorrider(map,i,w) {
+    let len = map.length
+    let c = 0
+    if((i+w)<len&&map[i+w]!=' ')
+        c++
+    if((i-w)>=0&&map[i-w]!=' ')
+        c++
+    if((i+1-1)%w!=0&&map[i+1-1]!=' ')
+        c++
+    if((i+w)<len&&map[i+w]!=' ')
+        c++
 
+}
 module.exports = ({io})=>{
-
-    console.log('keyboardInputxxxx');
     return (req, res) => {    
+        // let w = req.headers.width+1 
+        // let h = req.headers.height
+        // let map = decodeURIComponent((req.headers.map))
+        // let ori = req.headers.orientation
+        // let move = req.headers.move
+        // console.log(req.headers.map)
+        // console.log(map)
+        // console.log("sdsd")
+        // for(var i=0;i<map.length;i++){
+        //     if(map[i]==/(>|<|ʌ|v)/){
+        //         map[i-w] = 'ʌ'
+                
+        //         if(move=='f'){
+        //             if((i-2*w)>=0 && map[i-w]!=' '){// road
+        //                 map[i-2*w] = 'ʌ'
+        //                 if((i-2*w)>=0)
+        //             }
+
+        //         }else if(move=='b'){
+                    
+        //         }else if(move=='r'){
+                    
+        //         }else if(move=='l'){
+                    
+        //         }
+        //     }
+        // }
+
+        
         var filename = "./data/csv_"; //prefix
         filename = filename.concat(req.headers.hash, '.json');
         

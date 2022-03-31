@@ -10,10 +10,24 @@ import random
 import time
 import sys 
 import json
+
+
 maze_path = sys.argv[1]
+mz = None
+try:
+  mz = Maze(maze_path) # TODO get map from server
+except:
+  result = {
+    'maze': "",
+    'car': -1,
+    'orientation': -1,
+    'explored': []
+  }
+  json = json.dumps(result)
 
-mz = Maze(maze_path) # TODO get map from server
-
+  print(str(json))
+  sys.stdout.flush()
+  
 mz.explored = [] # reset
 # nd_start = int(input("Enter starting node: "))
 

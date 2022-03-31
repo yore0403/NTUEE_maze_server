@@ -56,7 +56,7 @@ class Maze:
         end = self.Grid.get_all_end(self.checkpoints)
         ex = self.Grid.get_all_explored(self.explored)
         result = ""
-        for j in range(y+1):
+        for j in reversed(range(y+1)):
             for i in range(x+1):
                 if [i,j] == self.Grid.car_pos:
                     result += ori2symbol[self.Grid.car_symbol]
@@ -74,7 +74,7 @@ class Maze:
                 else:
                     result += ' '
 
-            if j!=y: result += '\n' 
+            if j!=0: result += '\n' 
         
         return result
 
@@ -105,8 +105,12 @@ class Maze:
     def pathToString(self, path): # graph nd_dict
         direction = ''
         nd_dict = self.Graph.nd_dict
-        for i in range(len(path)-2):
-            trans = (nd_dict[path[i]].getDirection(path[i+1]), nd_dict[path[i+1]].getDirection(path[i+2]))
+        for i in range(-1,len(path)-2):
+            # trans = (nd_dict[path[i]].getDirection(path[i+1]), nd_dict[path[i+1]].getDirection(path[i+2]))
+            if i==-1:
+                trans = (self.Grid.car_symbol,nd_dict[path[0]].getDirection(path[1]))
+            else:
+                trans = (nd_dict[path[i]].getDirection(path[i+1]), nd_dict[path[i+1]].getDirection(path[i+2]))
             #trans = (self.nd_direction[path[i]][path[i+1]], self.nd_direction[path[i+1]][path[i+2]])
             if trans in [(1,4),(3,1),(2,3),(4,2)]:
                 cmmd = 'r'

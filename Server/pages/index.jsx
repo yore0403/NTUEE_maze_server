@@ -4,8 +4,9 @@ import fetch from "isomorphic-fetch";
 import Display from "../containers/display";
 import Ip from "../containers/ip";
 import { Container, Row, Col } from "reactstrap";
-import localStorage from "localStorage";
-
+// import localStorage from "localStorage";
+import jszip from "jszip"
+import { saveAs } from 'file-saver';
 
 const  generateRandomString = (num) => {
     let result1= Math.random().toString(36).substring(3,num+3);       
@@ -26,7 +27,10 @@ class HomePage extends Component {
   constructor(props) {
     super(props);
     console.log("constructor");
-    localStorage.setItem("ip",this.props.ip); // NOTE
+    if (typeof window !== 'undefined') {
+        localStorage.setItem("ip",this.props.ip); // NOTE
+    }
+    
     this.state = {
         ip:this.props.ip,
         map: "",
@@ -43,6 +47,7 @@ class HomePage extends Component {
         window.addEventListener("keydown", this.keyDown);
         window.addEventListener("beforeunload", this.onbeforeunload);
         window.addEventListener('load', this.onLoad);
+        document.title = "電資工程入門設計與實作 - 循跡演算法測試網站"
     }
     componentWillUnmount() {
         window.removeEventListener("keydown", this.keyDown);
@@ -100,13 +105,13 @@ class HomePage extends Component {
             }
         }
 
-        let _height = prompt('輸入迷宮高度 (2 ≤ y ≤ 6)：','3');
+        let _height = prompt('輸入迷宮高度 (2 ≤ y ≤ 7)：','3');
         if(_height== null){
             return;
         }else {
             _height = parseInt(_height,10);
-            if( _height>6){
-                alert("高度不能超過6!");
+            if( _height>7){
+                alert("高度不能超過7!");
                 return;
             }else if( _height<0){
                 alert("高度不能小於2!");
@@ -158,43 +163,63 @@ class HomePage extends Component {
     }
 
     handleClickMessageKey = () => {
-        let w = localStorage.getItem("width")-1;
-        let _x = prompt('輸入起始位置x(位於端點會朝向唯一的路徑，其他預設朝上)\n0 ≤ x ≤ '+w,'0');
+        let w = localStorage.getItem("width");
+        let h = localStorage.getItem("height");
+        let _x = prompt('輸入起始位置(端點順序：由右到左由上到下)\n1 ≤ x ≤ '+w*h,'1');
         if(_x== null){
             return;
         }else {
             _x = parseInt(_x, 10);
 
-            if( _x>w){
-                alert("x不能超過"+w+"!");
+            if( _x>w*h){
+                alert("x不能超過"+w*h+"!");
                 return;
-            }else if( _x<0){
-                alert("x不能小於0!");
+            }else if( _x<1){
+                alert("x不能小於1!");
                 return;
             }else if(isNaN(_x)){
                 alert("x必須是數字!");
                 return;
             }
-        }       
+        }    
+        let _nd_start = _x;
+
+        // let _x = prompt('輸入起始位置x(位於端點會朝向唯一的路徑，其他預設朝上)\n0 ≤ x ≤ '+w,'0');
+        // if(_x== null){
+        //     return;
+        // }else {
+        //     _x = parseInt(_x, 10);
+
+        //     if( _x>w){
+        //         alert("x不能超過"+w+"!");
+        //         return;
+        //     }else if( _x<0){
+        //         alert("x不能小於0!");
+        //         return;
+        //     }else if(isNaN(_x)){
+        //         alert("x必須是數字!");
+        //         return;
+        //     }
+        // }       
         
-        let h = localStorage.getItem("height")-1;
-        let _y = prompt('輸入起始位置y(位於端點會朝向唯一的路徑，其他預設朝上)\n0 ≤ y ≤ '+h,'0');
-        if(_y== null){
-            return;
-        }else {
-            _y = parseInt(_y, 10);
-            if( _y>w){
-                alert("y不能超過"+h+"!");
-                return;
-            }else if( _y<0){
-                alert("y不能小於0!");
-                return;
-            }else if(isNaN(_y)){
-                alert("y必須是數字!");
-                return;
-            }
-        } 
-        let _nd_start = this.state.height*(this.state.width-_x-1)+_y+1;
+        // let h = localStorage.getItem("height")-1;
+        // let _y = prompt('輸入起始位置y(位於端點會朝向唯一的路徑，其他預設朝上)\n0 ≤ y ≤ '+h,'0');
+        // if(_y== null){
+        //     return;
+        // }else {
+        //     _y = parseInt(_y, 10);
+        //     if( _y>w){
+        //         alert("y不能超過"+h+"!");
+        //         return;
+        //     }else if( _y<0){
+        //         alert("y不能小於0!");
+        //         return;
+        //     }else if(isNaN(_y)){
+        //         alert("y必須是數字!");
+        //         return;
+        //     }
+        // } 
+        // let _nd_start = this.state.height*(_x)+_y+1;
 
         fetch(localStorage.getItem("ip")+"/keyBoard",{method: "GET",headers:{nd_start:_nd_start,hash:localStorage.getItem("hash")}})
         .then(async res => {
@@ -231,47 +256,71 @@ class HomePage extends Component {
     }
 
     handleClickStr = () => {
-        let w = localStorage.getItem("width")-1;
-        let _x = prompt('輸入起始位置x(位於端點會朝向唯一的路徑，其他預設朝上)\n0 ≤ x ≤ '+w,'0');
+        let w = localStorage.getItem("width");
+        let h = localStorage.getItem("height");
+        let _x = prompt('輸入起始位置(端點順序：由右到左由上到下)\n1 ≤ x ≤ '+w*h,'1');
         if(_x== null){
             return;
         }else {
             _x = parseInt(_x, 10);
 
-            if( _x>w){
-                alert("x不能超過"+w+"!");
+            if( _x>w*h){
+                alert("x不能超過"+w*h+"!");
                 return;
-            }else if( _x<0){
-                alert("x不能小於0!");
+            }else if( _x<1){
+                alert("x不能小於1!");
                 return;
             }else if(isNaN(_x)){
                 alert("x必須是數字!");
                 return;
-            }   
-        }    
-        
-        let h = localStorage.getItem("height")-1;
-        let _y = prompt('輸入起始位置y(位於端點會朝向唯一的路徑，其他預設朝上)\n0 ≤ y ≤ '+h,'0');
-        if(_y== null){
-            return;
-        }else {
-            _y = parseInt(_y, 10);
-
-            if( _y>w){
-                alert("y不能超過"+h+"!");
-                return;
-            }else if( _y<0){
-                alert("y不能小於0!");
-                return;
-            }else if(isNaN(_y)){
-                alert("y必須是數字!");
-                return;
             }
-        }  
+        }    
+        let _nd_start = _x;
+    
+        // let w = localStorage.getItem("width")-1;
+        // let _x = prompt('輸入起始位置x(位於端點會朝向唯一的路徑，其他預設朝上)\n0 ≤ x ≤ '+w,'0')
+
+        // if(_x== null){
+        //     return;
+        // }else {
+        //     _x = parseInt(_x, 10);
+
+        //     if( _x>w){
+        //         alert("x不能超過"+w+"!");
+        //         return;
+        //     }else if( _x<0){
+        //         alert("x不能小於0!");
+        //         return;
+        //     }else if(isNaN(_x)){
+        //         alert("x必須是數字!");
+        //         return;
+        //     }   
+        // }    
+        
+        // let h = localStorage.getItem("height")-1;
+        // let _y = prompt('輸入起始位置y(位於端點會朝向唯一的路徑，其他預設朝上)\n0 ≤ y ≤ '+h,'0');
+        // if(_y== null){
+        //     return;
+        // }else {
+        //     _y = parseInt(_y, 10);
+
+        //     if( _y>w){
+        //         alert("y不能超過"+h+"!");
+        //         return;
+        //     }else if( _y<0){
+        //         alert("y不能小於0!");
+        //         return;
+        //     }else if(isNaN(_y)){
+        //         alert("y必須是數字!");
+        //         return;
+        //     }
+        // }  
+        // let _nd_start = this.state.height*(_x)+_y+1;
+
         let str = prompt('輸入指令字串：',"");
         const validChar = new Set(['f', 'r', 'l', 'b'])
-        let strspilt = str.split("");
         if(str==null)return;
+        let strspilt = str.split("");
         if(str==""){
             alert("請輸入字串 (f,l,r,b)");
 
@@ -282,11 +331,7 @@ class HomePage extends Component {
                 alert("有f,l,r,b以外的字元: \'"+strspilt.at(i)+"\'");
                 return;
             }
-        }
-
-        let _nd_start = this.state.height*(this.state.width-_x-1)+_y+1;
-
-        
+        }        
 
         fetch(localStorage.getItem("ip")+"/string",{method: "GET",headers:{nd_start:_nd_start,hash:localStorage.getItem("hash")}})
         .then(async res => {
@@ -298,16 +343,81 @@ class HomePage extends Component {
                 car: n.car,
                 orientation: n.orientation,
                 explored: n.explored,
-                message: "字串播放模式，請使用[Enter]播放移動路線\n> "+str+"\n  ",
+                message: "字串播放模式，請使用[右方向鍵]逐步播放移動路線\n> "+str+"\n  ",
                 map_message: "總步數："+str.length+"，目前在第0步",
                 str: str,
                 stridx: 0
             })
             console.log(this.state.str);
-
-
         })
 
+    }
+    handleClickDFS = () => {
+        let w = localStorage.getItem("width");
+        let h = localStorage.getItem("height");
+        let _x = prompt('輸入起始位置(端點順序：由右到左由上到下)\n1 ≤ x ≤ '+w*h,'1');
+        if(_x== null){
+            return;
+        }else {
+            _x = parseInt(_x, 10);
+
+            if( _x>w*h){
+                alert("x不能超過"+w*h+"!");
+                return;
+            }else if( _x<1){
+                alert("x不能小於1!");
+                return;
+            }else if(isNaN(_x)){
+                alert("x必須是數字!");
+                return;
+            }
+        }    
+        let _nd_start = _x;
+        _x = prompt('輸入結束位置(端點順序：由右到左由上到下)\n1 ≤ x ≤ '+w*h,'1');
+        if(_x== null){
+            return;
+        }else {
+            _x = parseInt(_x, 10);
+
+            if( _x>w*h){
+                alert("x不能超過"+w*h+"!");
+                return;
+            }else if( _x<1){
+                alert("x不能小於1!");
+                return;
+            }else if(isNaN(_x)){
+                alert("x必須是數字!");
+                return;
+            }
+        }    
+        let _nd_end = _x;
+        let str = prompt('輸入指令字串：',"");
+        const validChar = new Set(['f', 'r', 'l', 'b'])
+        if(str==null)return;
+        let strspilt = str.split("");
+        if(str==""){
+            alert("請輸入字串 (f,l,r,b)");
+
+            return;
+        }
+        for(var i=0;i<str.length;i++){
+            if(!validChar.has(strspilt.at(i))){
+                alert("有f,l,r,b以外的字元: \'"+strspilt.at(i)+"\'");
+                return;
+            }
+        }     
+
+
+        fetch(localStorage.getItem("ip")+"/DFScheck",{method: "GET",headers:{nd_start:_nd_start,nd_end:_nd_end,str:str,hash:localStorage.getItem("hash")}})
+        .then(async res => {
+            var n = await res.json();
+            console.log("DFS");
+            this.setState({
+                state: 4,
+                message: "DFS check：\n是否為最短路徑長度... "+(n.equal_path_len?'Yes':'No (lentgh == '+str.length+')')+"\n是否到達終點... "+(n.reach_goal?'Yes':'No (now at node '+n.pos+')')+"\n"+((n.equal_path_len&n.reach_goal)?'PASS!':'Fail :('),
+            })
+            console.log(this.state.str);
+        })            
     }
 
     downloadCSV = () => {
@@ -324,6 +434,37 @@ class HomePage extends Component {
 
         }))
     }
+    downloadZIP = () => {
+        fetch(localStorage.getItem("ip")+"/downloadZIP",{method: "GET"})
+        .then((res => res.json()))
+        .then(resp => {
+            console.log(resp);
+            console.log("res");
+            var zip = new jszip();
+            var arr = resp
+            var checklists = zip.folder("checklist"); // the folder which will be zip
+            console.log(arr);
+            console.log(Object.entries(arr));
+            Object.entries(arr).forEach(([key, value]) => {
+
+                checklists.file("CL_maze_"+key+".csv",value);
+                // checklists.file(key,value)
+            });
+            checklists.generateAsync({type:"blob"}).then(function(content) {
+                saveAs(content, "example.zip");
+            });
+
+        })
+        // var zip = new jszip();
+
+        // var checklists = zip.folder("checklist"); // the folder which will be zip
+        // checklists.file('b.txt',maze1)
+        // checklists.file('a.txt','hello')
+        // zip.generateAsync({type:"blob"}).then(function(content) {
+        //     saveAs(content, "example.zip");
+        // });
+    }
+    
     uploadCSV = (e) => {
         this.setState({
             message: "上傳中..."
@@ -349,19 +490,24 @@ class HomePage extends Component {
             console.log("rawdata",rawdata);
             if (localStorage.getItem("hash") === null)
                 localStorage.setItem("hash",generateRandomString(6));
-            rawdata2 = rawdata.split("\n");
+            rawdata2 = rawdata.split(/\r?\n/);
             rawdata2 = rawdata2.join("/");
-            console.log("ddd",rawdata2);
 
             return 
         }
 
         reader.onloadend = (event,(data) => {
-
             fetch(localStorage.getItem("ip")+"/upload",{method: "GET", headers:{"Content-Type": "application/json",hash:localStorage.getItem("hash"),raw:rawdata2}}) // call get
             .then(async res => {
                 var n = await res.json();
-                console.log("keyboard");
+                if(n.maze==""){
+                    this.setState({
+                        message: ""
+    
+                    })
+                    alert("檔案格式錯誤");
+                }
+                else{
                 this.setState({
                     map: n.maze,
                     car: n.car,
@@ -370,6 +516,9 @@ class HomePage extends Component {
                     message: "上傳完成"
 
                 })
+                }
+
+                e.target.value = "";
             })
         });
 
@@ -403,7 +552,8 @@ class HomePage extends Component {
             // this.setState({ message: e.keyCode });
             if (e.keyCode === 37) {
             console.log("left");
-            fetch(localStorage.getItem("ip")+"/keyBoard/Move",{method: "GET",headers:{nd_start:this.state.car,orientation:this.state.orientation,move:'l',hash:localStorage.getItem("hash"),explored:this.state.explored}})
+            let mm = (encodeURIComponent(this.state.map));
+            fetch(localStorage.getItem("ip")+"/keyBoard/Move",{method: "GET",headers:{nd_start:this.state.car,orientation:this.state.orientation,move:'l',hash:localStorage.getItem("hash"),explored:this.state.explored,map:mm,width:this.state.width,height:this.state.height}})
             .then(async res => {
                 var n = await res.json();
                 this.setState({
@@ -417,7 +567,8 @@ class HomePage extends Component {
             })
             }else if (e.keyCode === 38) {
             console.log("up");
-            fetch(localStorage.getItem("ip")+"/keyBoard/Move",{method: "GET",headers:{nd_start:this.state.car,orientation:this.state.orientation,move:'f',hash:localStorage.getItem("hash"),explored:this.state.explored}})
+            let mm = (encodeURIComponent(this.state.map));
+            fetch(localStorage.getItem("ip")+"/keyBoard/Move",{method: "GET",headers:{nd_start:this.state.car,orientation:this.state.orientation,move:'f',hash:localStorage.getItem("hash"),explored:this.state.explored,map:mm,width:this.state.width,height:this.state.height}})
             .then(async res => {
                 var n = await res.json();
                 this.setState({
@@ -431,7 +582,8 @@ class HomePage extends Component {
             })
             }else if (e.keyCode === 39) {
             console.log("right");
-            fetch(localStorage.getItem("ip")+"/keyBoard/Move",{method: "GET",headers:{nd_start:this.state.car,orientation:this.state.orientation,move:'r',hash:localStorage.getItem("hash"),explored:this.state.explored}})
+            let mm = (encodeURIComponent(this.state.map));
+            fetch(localStorage.getItem("ip")+"/keyBoard/Move",{method: "GET",headers:{nd_start:this.state.car,orientation:this.state.orientation,move:'r',hash:localStorage.getItem("hash"),explored:this.state.explored,map:mm,width:this.state.width,height:this.state.height}})
             .then(async res => {
                 var n = await res.json();
                 this.setState({
@@ -445,7 +597,8 @@ class HomePage extends Component {
             })
             }else if (e.keyCode === 40) {
             console.log("down");
-            fetch(localStorage.getItem("ip")+"/keyBoard/Move",{method: "GET",headers:{nd_start:this.state.car,orientation:this.state.orientation,move:'b',hash:localStorage.getItem("hash"),explored:this.state.explored}})
+            let mm = (encodeURIComponent(this.state.map));
+            fetch(localStorage.getItem("ip")+"/keyBoard/Move",{method: "GET",headers:{nd_start:this.state.car,orientation:this.state.orientation,move:'b',hash:localStorage.getItem("hash"),explored:this.state.explored,map:mm,width:this.state.width,height:this.state.height}})
             .then(async res => {
                 var n = await res.json();
                 this.setState({
@@ -461,8 +614,8 @@ class HomePage extends Component {
             })
             }
             else if (e.keyCode === 82) { // R for reset
-                console.log("down");
-                fetch(localStorage.getItem("ip")+"/keyBoard/Move",{method: "GET",headers:{nd_start:this.state.car,orientation:this.state.orientation,move:'x',hash:localStorage.getItem("hash"),explored:''}})
+            let mm = (encodeURIComponent(this.state.map));
+            fetch(localStorage.getItem("ip")+"/keyBoard/Move",{method: "GET",headers:{nd_start:this.state.car,orientation:this.state.orientation,move:'x',hash:localStorage.getItem("hash"),explored:this.state.explored,map:mm,width:this.state.width,height:this.state.height}})
                 .then(async res => {
                     var n = await res.json();
                     this.setState({
@@ -495,16 +648,20 @@ class HomePage extends Component {
             //         })
             //     })
             // }else 
-            if (e.keyCode === 13) {
+            if (e.keyCode === 39) {
                 var _stridx = this.state.stridx;
-                if(_stridx>=this.state.str.length)return
+                if(_stridx>=this.state.str.length){
+                    this.setState({
+                        state: 3, // can get key
+                        map_message: "播放結束"
+                    })
+                    return
+                }
                 
                 let move_char = this.state.str[_stridx];
-                console.log(move_char);
 
-
-
-                fetch(localStorage.getItem("ip")+"/keyBoard/Move",{method: "GET",headers:{nd_start:this.state.car,orientation:this.state.orientation,move:move_char,hash:localStorage.getItem("hash"),explored:this.state.explored}})
+            let mm = (encodeURIComponent(this.state.map));
+            fetch(localStorage.getItem("ip")+"/keyBoard/Move",{method: "GET",headers:{nd_start:this.state.car,orientation:this.state.orientation,move:move_char,hash:localStorage.getItem("hash"),explored:this.state.explored,map:mm,width:this.state.width,height:this.state.height}})
                 .then(async res => {
                     var n = await res.json();
                     let cursor = "  ";
@@ -519,7 +676,7 @@ class HomePage extends Component {
                         car: n.car,
                         orientation: n.orientation,
                         map_message: "總步數："+this.state.str.length+"，目前在第"+(_stridx+1)+"步",
-                        message: "字串播放模式，請使用[Enter]逐步播放移動路線\n> "+this.state.str+"\n"+cursor,
+                        message: "字串播放模式，請使用[右方向鍵]逐步播放移動路線\n> "+this.state.str+"\n"+cursor,
                         explored: n.explored,
                         stridx: _stridx+1
                     })
@@ -546,25 +703,42 @@ class HomePage extends Component {
                         {/* <Menu/> */}
                         <button value className="menu" onClick={this.handleClickMessage}> 生成地圖 </button>
                         <button value  className="menu" onClick={this.handleClickMessageKey} > 鍵盤模擬輸入 </button>
-                        <button value  className="menu" onClick={this.handleClickStr}> 字串輸入 </button>
-                        <button value  className="menu" onClick={this.downloadCSV}> 下載 csv </button>
-                        {/* <div className="menu" onClick={this.uploadCSV}>上傳 csv</div> */}
-                        <div>
-                        <label className="menu" htmlFor="uploads">上傳 csv</label>
-                        <input type = {"file"} id="uploads" accept=".csv" className="menu"  style={{ display: "none" }} accept=".csv" onChange={this.uploadCSV}/>
-                        </div>
-
+                        <button value  className="menu" onClick={this.handleClickStr}> 字串輸入</button>
+                        <button value  className="menu" onClick={this.handleClickDFS}> 演算法 DFS check</button>
+                        
                     </div>
                     <div className="right">
                     <Display  m={this.state.map}/>
                     <p className="map_message">{this.state.map_message}</p>
 
                     </div>
+                    <div className="left">
+                        <button value  className="menu" onClick={this.downloadCSV}> 下載 csv </button>
+                        <div>
+                        <label className="menu" htmlFor="uploads">上傳 csv</label>
+                        <input type = {"file"} id="uploads" accept=".csv" className="menu"  style={{ display: "none" }} accept=".csv" onChange={this.uploadCSV}/>
+                        </div>
+                        {/* <button value  className="menu" onClick={this.downloadZIP}> 下載 checklists csv </button> */}
+                        </div>
                 </div>
                 <div className="message_body">
                         <p className="message">{this.state.message}</p>
                 </div>
+                <div className="buttons">
+                
+                <a className="button" type="button" href='https://magenta-turquoise-4bd.notion.site/94530ce60595466cb17e3782d7dc0c52' target="_blank">
+                    <span className="tip">使用說明</span>
+                    <img className="round_btn"src="https://img.icons8.com/ios-filled/100/000000/help--v1.png"></img></a>
+                
+                <a className="button" type="button" href='https://forms.gle/AGVhzFmu14Uk19DU8' target="_blank">
+                <span className="tip">問題回報</span>
+                    <img className="round_btn" src="https://img.icons8.com/ios-filled/100/000000/box-important--v1.png"></img>
+                </a>
+
+
+                    </div>
             </div>
+            
         );
     }
 }

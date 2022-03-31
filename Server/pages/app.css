@@ -31,7 +31,7 @@ h1 {
     display: flex;
     justify-content: center;
     align-items: flex-start;
-    height: 55%;
+    height: 50%;
     min-height: 434px;
     /* border: white 5px solid; */
     
@@ -66,7 +66,7 @@ h1 {
 
 .map_message {
     margin: 10px;
-    height: 4rem;
+    height: 3rem;
     display: flex;
     align-items: center;
     text-align: left;
@@ -113,7 +113,7 @@ h1 {
 
 .menu {
     margin: 10px;
-    height: 4rem;
+    height: 2rem;
     display: flex;
     align-items: center;
     text-align: center;
@@ -124,7 +124,14 @@ h1 {
     font-size: large;
     background-color: rgba(255, 166, 0, 0.3);
     width: 250px;
+    text-decoration: none;
 }
+.menu:hover {
+    cursor: pointer;
+    border-color: #D0D0D0;
+    text-decoration: none;
+}
+
 .menu:active {
     background-color: rgba(175, 114, 0, 0.3);
 }
@@ -143,18 +150,19 @@ h1 {
 
 .displayText {
     margin: 10px;
-    height: 20rem;
+    height: 20.5rem;
     width: 23rem;
     display: flex;
     align-items: center;
     text-align: center;
     justify-content: center; 
-    padding: 0rem;
+    padding-top: 1rem;
+
     /* border-radius: 10px; */
     /* border: white 5px solid; */
     color: black;
-    font-size: 20px;
-    line-height: 1.5rem;
+    font-size: 16px;
+    line-height: 1.3rem;
     letter-spacing:0.55rem;
     white-space: pre-wrap;
     background-color: rgba(90, 63, 13, 0.3);
@@ -162,3 +170,90 @@ h1 {
     margin: 10px;
     color: white;    
 }
+
+.redText {
+    color: LightPink;
+    white-space: nowrap;
+}
+.greenText {
+    color: LightGreen;
+    white-space: nowrap;
+}
+.orangeText {
+    color: PaleTurquoise;
+    white-space: nowrap;
+}
+.notChangeText {
+    color: black;
+    white-space: nowrap;
+
+}
+
+.buttons {
+    display: flex;
+    flex-direction: column;
+    position:fixed;
+    bottom: 30px;
+    right: 40px;
+}
+a.botton {
+    
+    display: inline;
+    width: 50px;
+    height: 50px;
+    align-items: center;
+    text-align: center;
+    align-content: center;
+    text-decoration: none;
+    
+    /* background-image: url(https://img.icons8.com/material/96/000000/box-important--v1.png); */
+    background-image: url(https://img.icons8.com/ios/100/000000/box-important--v1.png);
+}
+a:hover {
+
+    text-decoration: none;
+    
+}
+.round_btn { 
+    
+    width: 40px; 
+    height: 40px;
+    margin: 4px;
+    filter: invert(100%);
+    align-items: center;
+    text-align: center;
+    align-content: center;
+
+}
+.round_btn:hover { 
+    
+    width: 40px; 
+    height: 40px;
+    margin: 4px;
+    filter: invert(90%);
+}
+.button .tip {
+    visibility: hidden;
+    position: inherit;
+    /* bottom: 50px; */
+    /* width: 5em; */
+    align-items:center;
+    text-align: center;
+    align-content:center;
+    color: white;
+    text-decoration: none;
+
+}
+.button:hover .tip {
+    visibility: visible;
+    position: inherit;
+    color: white;
+    font-size: 1em;
+    align-items:center;
+    text-align: center;
+    align-content:center;
+    vertical-align: middle;
+    font-family: 'Menlo', monospace;
+    
+}
+

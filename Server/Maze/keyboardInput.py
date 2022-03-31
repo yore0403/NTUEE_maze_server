@@ -18,6 +18,7 @@ my_list = sys.argv[5].split(",")
 my_list = [int(i) for i in my_list if i != '']
 
 mz.explored = my_list # reset
+if sys.argv[4]=='x':mz.explored=[]
 # nd_start = int(input("Enter starting node: "))
 
 mz.set_car(int(sys.argv[2]),int(sys.argv[3]))
